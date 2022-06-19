@@ -3,7 +3,8 @@
 //  License, v. 2.0. If a copy of the MPL was not distributed with this
 //  file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Script for displaying upcoming rocket launches in the Scriptable widgets app for iOS.
+// A script for displaying upcoming rocket launches.
+// Made by Rik Rossel for the Scriptable app on iOS and iPadOS.
 
 // Limit how many launches will be queried from the thespacedevs API.
 // There is a possibility that 10 is not enough to show launches with the ID's given below in the widget.
