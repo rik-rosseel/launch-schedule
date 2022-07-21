@@ -146,6 +146,17 @@ function createWidget() {
  function createLargeWidget() {
   let w = new ListWidget();
   w.backgroundColor = BGColor;
+  // Guard clause for data
+  if (!data.results) {
+    title = w.addText("Unable to fetch upcoming launches.")  
+    title.font = primaryFont
+    title.textColor = primaryTextColor
+    detail = w.addText(data.detail)  
+    detail.font = secondaryFont
+    detail.textColor = secondaryTextColor
+    return w
+  }
+  
   let count = 0;
   for (launch of data.results) {
     if (!isValidStatus(launch.status.id) || count >= 5) {
