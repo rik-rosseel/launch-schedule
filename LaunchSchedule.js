@@ -59,10 +59,10 @@ if (config.runsInWidget) {
 
 
 /** 
- * Function that creates a Widget with a first upcoming launch
+ * Create a Widget with a first upcoming launch
  * and several more upcoming launches with less details.
  * 
- * @returns {ListWidget} widget
+ * @returns {ListWidget} The widget to show.
  */
 function createWidget() {  
   // Root widget element.
@@ -72,13 +72,7 @@ function createWidget() {
   
   // Guard clause for data
   if (!data.results) {
-    title = w.addText("Unable to fetch upcoming launches.")  
-    title.font = primaryFont
-    title.textColor = primaryTextColor
-    detail = w.addText(data.detail)  
-    detail.font = secondaryFont
-    detail.textColor = secondaryTextColor
-    return w
+    return noDataWidget(w);
   }
   
   let firstLaunchIndex = 0
@@ -148,13 +142,7 @@ function createWidget() {
   w.backgroundColor = BGColor;
   // Guard clause for data
   if (!data.results) {
-    title = w.addText("Unable to fetch upcoming launches.")  
-    title.font = primaryFont
-    title.textColor = primaryTextColor
-    detail = w.addText(data.detail)  
-    detail.font = secondaryFont
-    detail.textColor = secondaryTextColor
-    return w
+    return noDataWidget(w);
   }
   
   let count = 0;
@@ -195,8 +183,8 @@ function createWidget() {
 
 /**
  * Get data from url and load it as JSON.
- * @param {string}          url   The API url query.
- * @returns {Promise<any>}        Data from the url.
+ * @param {string} url The API url query.
+ * @returns {Promise<any>} Data from the url.
  */
 async function getData(url) {
   const r = new Request(url);
@@ -205,9 +193,24 @@ async function getData(url) {
 }
 
 /**
+ * Create a widget to show when no data was available.
+ * @param {ListWidget} widget The widget to build on.
+ * @returns {ListWidget} The widget to show.
+ */
+function noDataWidget(widget) {
+  title = widget.addText("Unable to fetch upcoming launches.");
+  title.font = primaryFont;
+  title.textColor = primaryTextColor;
+  detail = widget.addText(data.detail);
+  detail.font = secondaryFont;
+  detail.textColor = secondaryTextColor;
+  return widget;
+}
+
+/**
  * Check if the given status ID is a valid status ID
- * @param {int}             statusID    The integer id for the status.
- * @returns {bool}                      True iff (statusID == 1 || statusID == 2 || statusID == 8).
+ * @param {int} statusID The integer id for the status.
+ * @returns {bool} True iff (statusID == 1 || statusID == 2 || statusID == 8).
  */
 function isValidStatus(statusID) {
   return statusID == 1 || statusID == 2 || statusID == 8;
@@ -215,8 +218,8 @@ function isValidStatus(statusID) {
 
 /**
  * Get the color for the given status ID.
- * @param {int}             statusID    The integer id for the status. 
- * @returns {Color}                     The color for the status.
+ * @param {int} statusID The integer id for the status. 
+ * @returns {Color} The color for the status iff isValidStatus(statusID) == true, else null.
  */
 function getStatusColor(statusID) {
   let statusColor;
@@ -236,8 +239,8 @@ function getStatusColor(statusID) {
 
 /**
  * Format the given date to Little Endian or Middle Endian format.
- * @param {string}          date        The date in ISO format
- * @returns {string}                    The date in Little Endian or Middle Endian format.
+ * @param {string} date The date in ISO format
+ * @returns {string} The date in Little Endian or Middle Endian format.
  */
 function launchTimeFormatter(date) {
   let launchTime = new Date(date);
