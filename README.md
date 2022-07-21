@@ -1,8 +1,8 @@
 # launch-schedule
 A script for displaying upcoming rocket launches in the Scriptable widget app for iOS.
 
-<img src="https://user-images.githubusercontent.com/36194842/180257971-4f319212-8cf0-48cf-8269-d879d322e31c.png" height="175" />
-<img src="https://user-images.githubusercontent.com/36194842/180257990-edb6eb9a-d6bd-4784-9adc-8f036630128c.png" height="175" />
+<img src="https://user-images.githubusercontent.com/36194842/180275473-d1501e37-eb6f-4e2d-81c7-e1030ba98f6b.png" height="175" />
+<img src="https://user-images.githubusercontent.com/36194842/180275500-eaad9c54-ce29-41fc-b3e2-6d362671ac59.png" height="175" />
 
 
 You can find the Scriptable app at https://scriptable.app/ or visit the Apple App Store at https://apps.apple.com/us/app/scriptable/id1405459188.
