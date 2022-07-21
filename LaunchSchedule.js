@@ -23,7 +23,7 @@ const statusFont = Font.blackMonospacedSystemFont(15);
 // COLORS.
 // Font Colors.
 const primaryTextColor = Color.dynamic(new Color("#000000"), new Color("#FFFFFF"));
-const secondaryTextColor = Color.dynamic(new Color("#4C4E52"), new Color("#999999"));
+const secondaryTextColor = Color.dynamic(new Color("#666666"), new Color("#999999"));
 // Status Colors.
 // Status | Abbr. | ID
 // Go for launch | Go | 1
@@ -106,7 +106,7 @@ function createWidget() {
   
   // First launch time and date.
   const launchTimeText = infoStack.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
-  launchTimeText.textColor = Color.lightGray();
+  launchTimeText.textColor = secondaryTextColor;
   launchTimeText.font = new Font("SF Pro", 15);
   
   w.addSpacer(10);
