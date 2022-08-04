@@ -22,18 +22,18 @@ const secondaryFont = new Font("SF Pro", 15)
 const statusFont = Font.blackMonospacedSystemFont(15);
 // COLORS.
 // Font Colors.
-const primaryTextColor = Color.dynamic(new Color("#000000"), new Color("#FFFFFF"));
+const primaryTextColor = Color.dynamic(new Color("#000000"), new Color("#ffffff"));
 const secondaryTextColor = Color.dynamic(new Color("#666666"), new Color("#999999"));
 // Status Colors.
 // Status | Abbr. | ID
 // Go for launch | Go | 1
-const goColor = Color.dynamic(new Color("#4CBB17"), new Color("#22ba48"));
+const goColor = Color.dynamic(new Color("#4cbb17"), new Color("#22ba48"));
 // To Be Determined | TBD | 2
-const TBDColor = Color.dynamic(new Color("#EF9B00"), new Color("#f6be00"));
+const TBDColor = Color.dynamic(new Color("#ef9b00"), new Color("#f6be00"));
 // To Be Confirmed | TBC | 8
 const TBCColor = Color.dynamic(new Color("#e86826"), new Color("#ff8c00"));
 // Background Color.
-const BGColor = Color.dynamic(new Color("#e1e1e1"), new Color("#1e1e1e"));
+const BGColor = Color.dynamic(new Color("#ffffff"), new Color("#1e1e1e"));
 // FORMAT STRINGS.
 // Date.
 const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
