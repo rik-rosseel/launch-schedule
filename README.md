@@ -5,6 +5,8 @@ A script for displaying upcoming rocket launches in the Scriptable widget app fo
 <img src="https://user-images.githubusercontent.com/36194842/180275500-eaad9c54-ce29-41fc-b3e2-6d362671ac59.png" height="175" />
 
 
-You can find the Scriptable app at https://scriptable.app/ or visit the Apple App Store at https://apps.apple.com/us/app/scriptable/id1405459188.
+You can find the Scriptable app at https://scriptable.app/ or visit the [Apple App Store](https://apps.apple.com/us/app/scriptable/id1405459188).
+
+View [source code](https://github.com/rik-rosseel/launch-schedule) on Github.
 
 For business inquiries contact Rik Rosseel at contact@rikrosseel.com.
