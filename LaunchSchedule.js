@@ -27,11 +27,11 @@ const secondaryTextColor = Color.dynamic(new Color("#666666"), new Color("#99999
 // Status Colors.
 // Status | Abbr. | ID
 // Go for launch | Go | 1
-const goColor = Color.dynamic(new Color("#4cbb17"), new Color("#22ba48"));
+const goColor = Color.dynamic(new Color("#4CBB17"), new Color("#22ba48"));
 // To Be Determined | TBD | 2
-const TBDColor = Color.dynamic(new Color("#ef9b00"), new Color("#f6be00"));
+const TBDColor = Color.dynamic(new Color("#ffba00"), new Color("#f6be00"));
 // To Be Confirmed | TBC | 8
-const TBCColor = Color.dynamic(new Color("#e86826"), new Color("#ff8c00"));
+const TBCColor = Color.dynamic(new Color("#ff8500"), new Color("#ff8c00"));
 // Background Color.
 const BGColor = Color.dynamic(new Color("#ffffff"), new Color("#1e1e1e"));
 // FORMAT STRINGS.
