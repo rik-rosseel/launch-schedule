@@ -202,7 +202,7 @@ function buildSmallWidget(widget) {
   // First launch status text.
 const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
   firstLaunchStatusText.textColor = BGColor;
-  firstLaunchStatusText.font = Font.blackMonospacedSystemFont(15);
+  firstLaunchStatusText.font = statusFont;
   
   // First launch time and date.
   const launchTimeText = widget.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
@@ -272,7 +272,7 @@ function buildMediumWidget(widget) {
   for (let i = firstLaunchIndex + 1; i < data.results.length; i++) {
     if (count == 3) {
       break;
-    } else if (data.results[i].status.id != 1 && data.results[i].status.id != 2 && data.results[i].status.id != 8) {
+    } else if (!isValidStatus(data.results[i].status.id)) {
     continue;
   }
     const upcomingStack = widget.addStack();
