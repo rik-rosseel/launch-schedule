@@ -4,10 +4,10 @@ A script for displaying upcoming rocket launches in the Scriptable widget app fo
 ## Configuration guide
 There are a few options at the beginning of the script that can be changed to your liking.
 
-* Date format (Little endian (dd/mm/yyyy) or Middle endian (mm/dd/yyy)
-* Running on macOS
 * Colors
 * Fonts
+* Date format (Little endian (dd/mm/yyyy) or Middle endian (mm/dd/yyy)
+* Running on macOS
 
 ## Running in Widget
 **IMPORTANT!** When running the script in a widget be sure to edit the widget and fill in the size of the widget in the parameter field.
@@ -15,7 +15,9 @@ There are 3 options:
 * Small
 * Medium
 * Large
-In the parameter field fill in the size of the widget. (e.g.: when using a medium sized widget fill in "Medium") If the parameter is missing or misspelled the widget will display a placeholder widget to fill in or edit the parameter field.
+
+(e.g.: when using a medium sized widget fill in `Medium`)\
+If the parameter is missing or misspelled the widget will display a placeholder widget to fill in or edit the parameter field.
 
 ## Light mode previews
 <img src="https://user-images.githubusercontent.com/36194842/190871200-2c9464ee-4387-4746-aa04-d4c07eeae75e.png" height="200" />
