@@ -179,10 +179,8 @@ function buildSmallWidget(widget) {
   // Check for first launch that is to be determined, to be confirmed or is go for launch.
   while (
     firstLaunchIndex < data.results.length 
-    && data.results[firstLaunchIndex].status.id != 1 
-    && data.results[firstLaunchIndex].status.id != 2 
-    && data.results[firstLaunchIndex].status.id != 8
-    ) {
+    && !isValidStatus(data.results[firstLaunchIndex].status.id)
+  ) {
     firstLaunchIndex++;
   }
   // Text for the first upcoming luanch.
@@ -200,7 +198,7 @@ function buildSmallWidget(widget) {
   widget.addSpacer(5);
   
   // First launch status text.
-const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
+  const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
   firstLaunchStatusText.textColor = BGColor;
   firstLaunchStatusText.font = statusFont;
   
@@ -230,10 +228,8 @@ function buildMediumWidget(widget) {
   // Check for first launch that is to be determined, to be confirmed or is go for launch.
   while (
     firstLaunchIndex < data.results.length 
-    && data.results[firstLaunchIndex].status.id != 1 
-    && data.results[firstLaunchIndex].status.id != 2 
-    && data.results[firstLaunchIndex].status.id != 8
-    ) {
+    && !isValidStatus(data.results[firstLaunchIndex].status.id)
+  ) {
     firstLaunchIndex++;
   }
   // Text for the first upcoming luanch.
