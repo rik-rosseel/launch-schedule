@@ -10,7 +10,7 @@ There are a few options at the beginning of the script that can be changed to yo
 * Running on macOS
 
 ## Running in Widget
-**IMPORTANT!** When running the script in a widget be sure to edit the widget and fill in the size of the widget in the parameter field.
+**IMPORTANT!** When running the script in a widget be sure to edit the widget (on iOS press and hold on the widget, then choose 'Edit "Scriptable"' and fill in the size of the widget in the parameter field.
 There are 3 options:
 * Small
 * Medium
