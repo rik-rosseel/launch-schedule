@@ -16,7 +16,8 @@ There are 3 options:
 * Medium
 * Large
 
-(e.g.: when using a medium sized widget fill in `Medium`)\
+(e.g.: when using a medium sized widget fill in `Medium`)
+
 If the parameter is missing or misspelled the widget will display a placeholder widget to fill in or edit the parameter field.
 
 ## Light mode previews
@@ -31,7 +32,7 @@ If the parameter is missing or misspelled the widget will display a placeholder 
 
 
 
-\
+
 You can find the Scriptable app at https://scriptable.app/ or visit the [Apple App Store](https://apps.apple.com/us/app/scriptable/id1405459188).
 
 View [source code](https://github.com/rik-rosseel/launch-schedule) on Github.
