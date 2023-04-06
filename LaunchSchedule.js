@@ -62,7 +62,7 @@ const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
  */
 const launchCountLimit = isOnMacOS ? 5 : 6;
 // WIDGET SIZES
-const sizes = ["Small", "Medium", "Large"];
+const sizes = ["small", "medium", "large"];
 
 // Root ListWidget
 let widget = new ListWidget();
@@ -99,9 +99,12 @@ if (config.runsInApp) {
 }
 // Or in the widget
 else if (config.runsInWidget) {
-  let sizeArg = args.widgetParameter.replace(/\s/g, '');
-  sizeArg = sizeArg[0].toUpperCase() + sizeArg.substring(1);
-  let size = sizes.indexOf(sizeArg);
+  let sizeArg = args.widgetParameter
+  let size = -1;
+  if (sizeArg) {
+    sizeArg.replace(/\s/g, '').toLowerCase();
+    size = sizes.indexOf(sizeArg);
+  }
   if (size == -1) {
     buildInvalidParamWidget(widget);
     widget.presentSmall();
