@@ -167,35 +167,30 @@ function buildSmallWidget(widget) {
     return;
   }
 
-  var firstLaunchIndex = 0
-  // Check for first launch that is to be determined, to be confirmed or is go for launch.
-  while (
-    firstLaunchIndex < data.results.length 
-    && !isValidStatus(data.results[firstLaunchIndex].status.id)
-  ) {
-    firstLaunchIndex++;
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+  if (launches.length > 0) {
+    let firstLaunch = launches[0];
+    // Text for the first upcoming luanch.
+    const firstLaunchName = widget.addText(firstLaunch.name);
+    firstLaunchName.font = primaryFont;
+    firstLaunchName.textColor = primaryTextColor;
+
+    // first launch status stack.
+    const statusStack = widget.addStack();
+    statusStack.cornerRadius = 10;
+    statusStack.setPadding(2, 7, 2, 7);
+    statusStack.backgroundColor = getStatusColor(firstLaunch.status.id);
+
+    // First launch status text.
+    const firstLaunchStatusText = statusStack.addText(firstLaunch.status.abbrev);
+    firstLaunchStatusText.textColor = BGColor;
+    firstLaunchStatusText.font = statusFont;
+
+    // First launch time and date.
+    const launchTimeText = widget.addText(launchTimeFormatter(firstLaunch.net));
+    launchTimeText.textColor = secondaryTextColor;
+    launchTimeText.font = new Font("SF Pro", 15);
   }
-  // Text for the first upcoming luanch.
-  const firstLaunchName = widget.addText(data.results[firstLaunchIndex].name);
-  firstLaunchName.font = primaryFont;
-  firstLaunchName.textColor = primaryTextColor;
-  
-  // first launch status stack.
-  const statusStack = widget.addStack();
-  statusStack.cornerRadius = 10;
-  statusStack.setPadding(2, 7, 2, 7);
-  statusStack.backgroundColor = getStatusColor(data.results[firstLaunchIndex].status.id);
-  
-  // First launch status text.
-  const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
-  firstLaunchStatusText.textColor = BGColor;
-  firstLaunchStatusText.font = statusFont;
-  
-  // First launch time and date.
-  const launchTimeText = widget.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
-  launchTimeText.textColor = secondaryTextColor;
-  launchTimeText.font = new Font("SF Pro", 15);
-  
 }
 
 /**
