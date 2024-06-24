@@ -205,65 +205,25 @@ function buildSmallWidget(widget) {
  */
 function buildMediumWidget(widget) {
   defaultWidgetConfiguration(widget, widgetSpacing["medium"]);
-  
   // Guard clause for data.
   if (!data.results) {
     buildUnableToFetchWidget(widget);
     return;
   }
   
-  let firstLaunchIndex = 0;
-  // Check for first launch that is to be determined, to be confirmed or is go for launch.
-  while (
-    firstLaunchIndex < data.results.length 
-    && !isValidStatus(data.results[firstLaunchIndex].status.id)
-  ) {
-    firstLaunchIndex++;
-  }
-  // Text for the first upcoming luanch.
-  const firstLaunchName = widget.addText(data.results[firstLaunchIndex].name);
-  firstLaunchName.font = primaryFont;
-  firstLaunchName.textColor = primaryTextColor;
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
 
-  // Stack for info of first launch (status, time and date).
-  const infoStack = widget.addStack();
-  infoStack.centerAlignContent();
-  
-  // first launch status stack.
-  const statusStack = infoStack.addStack();
-  statusStack.cornerRadius = 10;
-  statusStack.setPadding(2, 7, 2, 7);
-  statusStack.backgroundColor = getStatusColor(data.results[firstLaunchIndex].status.id);
-  
-  infoStack.addSpacer(10);
-  
-  // First launch status text.
-  const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.name);
-  firstLaunchStatusText.textColor = BGColor;
-  firstLaunchStatusText.font = statusFont;
-  
-  // First launch time and date.
-  const launchTimeText = infoStack.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
-  launchTimeText.textColor = secondaryTextColor;
-  launchTimeText.font = secondaryFont;
-
-  // Remaining upcoming launches.
-  let count = 0
-  for (let i = firstLaunchIndex + 1; i < data.results.length; i++) {
+  // Add launch info for first launch.
+  addLaunchInfo(widget, launches.shift());
+  // Add compact launch info for remaining launches.
+  let count = 0;
+  for (launch of launches) {
+    // Check if the max. of 3 launches is reached.
     if (count == 3) {
       break;
-    } else if (!isValidStatus(data.results[i].status.id)) {
-    continue;
-  }
-    const upcomingStack = widget.addStack();
-    upcomingStack.centerAlignContent();
-    const point = upcomingStack.addText("•");
-    point.font = Font.blackMonospacedSystemFont(25);
-    point.textColor = getStatusColor(data.results[i].status.id);
-    upcomingStack.addSpacer(4);
-    const upcomingLaunchName = upcomingStack.addText(data.results[i].name);
-    upcomingLaunchName.textColor = primaryTextColor;
-    
+    }
+    addCompactLaunchInfo(widget, launch);
     // Increment launch count.
     count++;
   }
@@ -282,41 +242,16 @@ function buildLargeWidget(widget) {
     return;
   }
 
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+
   let count = 0;
-  for (launch of data.results) {
-    // Check if the status ID is valid.
-    if (!isValidStatus(launch.status.id)) {
-      continue;
-    }
-    // Check if the limit of 6 launches is reached.
+  for (launch of launches) {
+    // Check if the limit of 5 or 6 launches is reached.
     if (count >= launchCountLimit) {
       break;
     }
-    // Text for upcoming launch.
-    let launchName = widget.addText(launch.name);
-    launchName.font = primaryFont;
-    launchName.textColor = primaryTextColor;
-    
-    // Stack fo rinfo of the launch (status, time and date).
-    let infoStack = widget.addStack();
-    infoStack.layoutHorizontally();
-
-    // Launch status stack.
-    let statusStack = infoStack.addStack();
-    let statusBGColor = getStatusColor(launch.status.id);
-    statusStack.backgroundColor = statusBGColor;
-    statusStack.cornerRadius = 10;
-    statusStack.setPadding(2, 7, 2, 7);
-    let statusText = statusStack.addText(launch.status.name);
-    statusText.font = statusFont;
-    statusText.textColor = BGColor;
-    
-    infoStack.addSpacer(10);
-    
-    let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
-    launchTimeText.font = secondaryFont;
-    launchTimeText.textColor = secondaryTextColor;
-        
+    addLaunchInfo(widget, launch);
     count++;
   }
 }
@@ -335,16 +270,46 @@ function buildExtraLargeWidget(widget) {
     return;
   }
 
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+
   let count = 0;
-  for (launch of data.results) {
-    // Check if the status ID is valid.
-    if (!isValidStatus(launch.status.id)) {
-      continue;
-    }
-    // Check if the limit of 6 launches is reached.
+  for (launch of launches) {
+    // Check if the limit of 5 or 6 launches is reached.
     if (count >= launchCountLimit) {
       break;
     }
+    addLaunchInfo(widget, launch);
+    count++;
+  }
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *                       HELPER FUNCTIONS                    *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * A function to determine the validity of a status ID.
+ * @param {int} statusID The status ID to check.
+ * @returns {bool} Returns true iff statusID == 1 || statusID == 2 || statusID == 8
+ */
+function isValidStatus(statusID) {
+  return statusID == 1 || statusID == 2 || statusID == 8;
+}
+
+function addCompactLaunchInfo(widget, launch) {
+  const upcomingStack = widget.addStack();
+  upcomingStack.centerAlignContent();
+  const point = upcomingStack.addText("•");
+  point.font = Font.blackMonospacedSystemFont(25);
+  point.textColor = getStatusColor(launch.status.id);
+  upcomingStack.addSpacer(4);
+  const upcomingLaunchName = upcomingStack.addText(launch.name);
+  upcomingLaunchName.textColor = primaryTextColor;
+}
+
+function addLaunchInfo(widget, launch) {
     // Text for upcoming launch.
     let launchName = widget.addText(launch.name);
     launchName.font = primaryFont;
@@ -369,23 +334,6 @@ function buildExtraLargeWidget(widget) {
     let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
     launchTimeText.font = secondaryFont;
     launchTimeText.textColor = secondaryTextColor;
-        
-    count++;
-  }
-}
-
-
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                       HELPER FUNCTIONS                    *
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-/**
- * A function to determine the validity of a status ID.
- * @param {int} statusID The status ID to check.
- * @returns {bool} Returns true iff statusID == 1 || statusID == 2 || statusID == 8
- */
-function isValidStatus(statusID) {
-  return statusID == 1 || statusID == 2 || statusID == 8;
 }
 
 /**
