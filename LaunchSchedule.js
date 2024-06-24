@@ -70,61 +70,42 @@ const url = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limi
 // Get the data from the API.
 const data = await getData(url)
 
+
+let widgetSize;
 // Check if the script runs in the app.
 if (config.runsInApp) {
   const message = "What is the size of the widget?";
   let index = await generateAlert(message, sizes);
-  switch (sizes[index]) {
-    case 0:
-      buildSmallWidget(widget);
-      widget.presentSmall();
-      break;
-    case 1:
-      buildMediumWidget(widget);
-      widget.presentMedium();
-      break;
-    case 2:
-      buildLargeWidget(widget);
-      widget.presentLarge();
-      break;
-    case 3:
-      buildLargeWidget(widget);
-      widget.presentLarge();
-      break;
-    default:
-      buildInvalidParamWidget(widget);
-      widget.presentSmall();
-      break;
-  }
-  Script.complete();
+  widgetSize = sizes[index];
 }
 // Or in the widget.
 else if (config.runsInWidget) {
-  // Select the size of the widget
-  switch (config.widgetFamily) {
-    case "small":
-      buildSmallWidget(widget);
-      widget.presentSmall();
-      break;
-    case "medium":
-      buildMediumWidget(widget);
-      widget.presentMedium();
-      break;
-    case "large":
-      buildLargeWidget(widget);
-      widget.presentLarge();
-      break;
-    case "extraLarge":
-      buildExtraLargeWidget(widget);
-      widget.presentLarge();
-      break;
-    default:
-      buildInvalidParamWidget(widget);
-      widget.presentSmall();
-      break;
-  }
-  Script.complete();
+  widgetSize = sizes[index];
 }
+// Select the size of the widget
+switch (widgetSize) {
+  case "small":
+    buildSmallWidget(widget);
+    widget.presentSmall();
+    break;
+  case "medium":
+    buildMediumWidget(widget);
+    widget.presentMedium();
+    break;
+  case "large":
+    buildLargeWidget(widget);
+    widget.presentLarge();
+    break;
+  case "extraLarge":
+    buildExtraLargeWidget(widget);
+    widget.presentLarge();
+    break;
+  default:
+    buildInvalidParamWidget(widget);
+    widget.presentSmall();
+    break;
+}
+Script.complete();
 
 
 /**
