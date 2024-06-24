@@ -80,7 +80,8 @@ if (config.runsInApp) {
 }
 // Or in the widget.
 else if (config.runsInWidget) {
-  widgetSize = sizes[index];
+
+  widgetSize = config.runsInWidget;
 }
 // Select the size of the widget
 switch (widgetSize) {
