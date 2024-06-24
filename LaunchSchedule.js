@@ -295,8 +295,6 @@ function buildLargeWidget(widget) {
     launchName.font = primaryFont;
     launchName.textColor = primaryTextColor;
     
-    widget.addSpacer(4);
-    
     // Stack fo rinfo of the launch (status, time and date).
     let infoStack = widget.addStack();
     infoStack.layoutHorizontally();
