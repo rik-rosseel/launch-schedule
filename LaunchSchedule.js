@@ -66,7 +66,7 @@ let widget = new ListWidget();
 
 
 // Compose API query url.
-const url = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limit=" + limit;
+const url = "https://lldev.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limit=" + limit;
 // Get the data from the API.
 const data = await getData(url)
 
