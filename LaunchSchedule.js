@@ -40,8 +40,6 @@ const TBCColor = Color.dynamic(new Color("#ffba00"), new Color("#f6be00"));
 /* OTHER */
 // Use Little Endian (EU) date format or Middle Endian (USA) date format.
 const isMEDateFormat = false;
-// Use the script on macOS.
-const isOnMacOS = false;
 // Limit how many launches will be queried from the thespacedevs API.
 // There is a possibility that 10 is not enough to show launches with the ID's given below in the widget.
 const limit = 10;
@@ -57,7 +55,7 @@ const limit = 10;
  */
 const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
 // Adjust large widget launch count limit based on platform.
-const launchCountLimit = isOnMacOS ? 5 : 6;
+const launchCountLimit = 5;
 // Widget sizes.
 const sizes = ["small", "medium", "large", "extraLarge"];
 const widgetSpacing = {"small": 3, "medium": 3, "large": 7, "extraLarge": 7}
@@ -187,9 +185,9 @@ function buildSmallWidget(widget) {
     firstLaunchStatusText.font = statusFont;
 
     // First launch time and date.
-    const launchTimeText = widget.addText(launchTimeFormatter(firstLaunch.net));
-    launchTimeText.textColor = secondaryTextColor;
-    launchTimeText.font = new Font("SF Pro", 15);
+    const launchDateText = widget.addText(launchDateFormatter(firstLaunch.net));
+    launchDateText.textColor = secondaryTextColor;
+    launchDateText.font = new Font("SF Pro", 15);
   }
 }
 
@@ -287,48 +285,67 @@ function buildExtraLargeWidget(widget) {
 /**
  * A function to determine the validity of a status ID.
  * @param {int} statusID The status ID to check.
- * @returns {bool} Returns true iff statusID == 1 || statusID == 2 || statusID == 8
+ * @returns {bool} Returns true if and only if statusID == 1 || statusID == 2 || statusID == 8
  */
 function isValidStatus(statusID) {
   return statusID == 1 || statusID == 2 || statusID == 8;
 }
 
+/**
+ * A function that builds a compact version of the launch info and adds it to the given widget.
+ * @param {ListWidget} widget The widget to add the compact launch info to.
+ * @param {Object} launch The launch object to be added.
+ */
 function addCompactLaunchInfo(widget, launch) {
-  const upcomingStack = widget.addStack();
-  upcomingStack.centerAlignContent();
-  const point = upcomingStack.addText("•");
+  // Launch Stack.
+  const launchStack = widget.addStack();
+  launchStack.centerAlignContent();
+  launchStack.spacing = 4;
+
+  // Status dot for launch
+  const point = launchStack.addText("•");
   point.font = Font.blackMonospacedSystemFont(25);
   point.textColor = getStatusColor(launch.status.id);
-  upcomingStack.addSpacer(4);
-  const upcomingLaunchName = upcomingStack.addText(launch.name);
-  upcomingLaunchName.textColor = primaryTextColor;
+
+  // Name of launch.
+  const launchName = launchStack.addText(launch.name);
+  launchName.textColor = primaryTextColor;
 }
 
+/**
+ * A function that builds the launch info and adds it to the given widget.
+ * @param {ListWidget} widget The widget to add the launch info to.
+ * @param {Object} launch The launch object to be added.
+ */
 function addLaunchInfo(widget, launch) {
-    // Text for upcoming launch.
-    let launchName = widget.addText(launch.name);
-    launchName.font = primaryFont;
-    launchName.textColor = primaryTextColor;
-    
-    // Stack fo rinfo of the launch (status, time and date).
-    let infoStack = widget.addStack();
-    infoStack.layoutHorizontally();
+  // Launch stack.
+  const launchStack = widget.addStack();
+  launchStack.layoutVertically();
+  launchStack.spacing = 4;
 
-    // Launch status stack.
-    let statusStack = infoStack.addStack();
-    let statusBGColor = getStatusColor(launch.status.id);
-    statusStack.backgroundColor = statusBGColor;
-    statusStack.cornerRadius = 10;
-    statusStack.setPadding(2, 7, 2, 7);
-    let statusText = statusStack.addText(launch.status.name);
-    statusText.font = statusFont;
-    statusText.textColor = BGColor;
-    
-    infoStack.addSpacer(10);
-    
-    let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
-    launchTimeText.font = secondaryFont;
-    launchTimeText.textColor = secondaryTextColor;
+  // Name of launch.
+  const launchName = launchStack.addText(launch.name);
+  launchName.font = primaryFont;
+  launchName.textColor = primaryTextColor;
+  
+  // Stack for info of the launch (status, time and date).
+  const infoStack = launchStack.addStack();
+  infoStack.spacing = 10;
+
+  // Stack for launch status.
+  const statusStack = infoStack.addStack();
+  const statusBGColor = getStatusColor(launch.status.id);
+  statusStack.backgroundColor = statusBGColor;
+  statusStack.cornerRadius = 10;
+  statusStack.setPadding(2, 7, 2, 7);
+  // Name of launch status.
+  const statusText = statusStack.addText(launch.status.name);
+  statusText.font = statusFont;
+  statusText.textColor = BGColor;
+  // Date of launch.
+  const launchDateText = infoStack.addText(launchDateFormatter(launch.net));
+  launchDateText.font = secondaryFont;
+  launchDateText.textColor = secondaryTextColor;
 }
 
 /**
@@ -372,7 +389,7 @@ async function getData(url) {
  * @param {String} Date The date to format (in ISO format).
  * @returns {String} The launch time formatted according to the specified date format.
  */
-function launchTimeFormatter(date) {
+function launchDateFormatter(date) {
   let launchTime = new Date(date);
   const df = new DateFormatter();
   df.dateFormat = dateFormat;
