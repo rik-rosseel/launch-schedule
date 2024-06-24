@@ -314,9 +314,7 @@ function buildLargeWidget(widget) {
     let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
     launchTimeText.font = secondaryFont;
     launchTimeText.textColor = secondaryTextColor;
-    
-    widget.addSpacer(10);
-    
+        
     count++;
   }
 }
