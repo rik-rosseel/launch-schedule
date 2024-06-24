@@ -40,7 +40,7 @@ const TBCColor = Color.dynamic(new Color("#ffba00"), new Color("#f6be00"));
 /* OTHER */
 // Use Little Endian (EU) date format or Middle Endian (USA) date format.
 const isMEDateFormat = false;
-// Use the script on macOS
+// Use the script on macOS.
 const isOnMacOS = false;
 // Limit how many launches will be queried from the thespacedevs API.
 // There is a possibility that 10 is not enough to show launches with the ID's given below in the widget.
@@ -51,33 +51,30 @@ const limit = 10;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-/** Little endian date format or Middle endian date format
- * @result Little endian format iff [isMEDateFormat] is equal to false
- * @result Middle endian format iff [isMEDateFormat] is equal to true
+/** Little endian date format or Middle endian date format.
+ * @result Little endian format iff [isMEDateFormat] is equal to false.
+ * @result Middle endian format iff [isMEDateFormat] is equal to true.
  */
 const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
-/** Adjust large widget launch count limit based on platform
- * 
- * 
- */
+// Adjust large widget launch count limit based on platform.
 const launchCountLimit = isOnMacOS ? 5 : 6;
-// WIDGET SIZES
-const sizes = ["small", "medium", "large"];
+// Widget sizes.
+const sizes = ["small", "medium", "large", "extraLarge"];
 
-// Root ListWidget
+// Root ListWidget.
 let widget = new ListWidget();
 
 
 // Compose API query url.
 const url = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limit=" + limit;
-// Get the data from the API
+// Get the data from the API.
 const data = await getData(url)
 
-// Check if the script runs in the app
+// Check if the script runs in the app.
 if (config.runsInApp) {
   const message = "What is the size of the widget?";
-  let size = await generateAlert(message, sizes);
-  switch (size) {
+  let index = await generateAlert(message, sizes);
+  switch (sizes[index]) {
     case 0:
       buildSmallWidget(widget);
       widget.presentSmall();
@@ -90,6 +87,10 @@ if (config.runsInApp) {
       buildLargeWidget(widget);
       widget.presentLarge();
       break;
+    case 3:
+      buildLargeWidget(widget);
+      widget.presentLarge();
+      break;
     default:
       buildInvalidParamWidget(widget);
       widget.presentSmall();
@@ -97,36 +98,30 @@ if (config.runsInApp) {
   }
   Script.complete();
 }
-// Or in the widget
+// Or in the widget.
 else if (config.runsInWidget) {
-  let sizeArg = args.widgetParameter
-  let size = -1;
-  if (sizeArg) {
-    sizeArg.replace(/\s/g, '').toLowerCase();
-    size = sizes.indexOf(sizeArg);
-  }
-  if (size == -1) {
-    buildInvalidParamWidget(widget);
-    widget.presentSmall();
-  } else {
-    switch (size) {
-      case 0:
-        buildSmallWidget(widget);
-        widget.presentSmall();
-        break;
-      case 1:
-        buildMediumWidget(widget);
-        widget.presentMedium();
-        break;
-      case 2:
-        buildLargeWidget(widget);
-        widget.presentLarge();
-        break;
-      default:
-        buildInvalidParamWidget(widget);
-        widget.presentSmall();
-        break;
-    }
+  // Select the size of the widget
+  switch (config.widgetFamily) {
+    case "small":
+      buildSmallWidget(widget);
+      widget.presentSmall();
+      break;
+    case "medium":
+      buildMediumWidget(widget);
+      widget.presentMedium();
+      break;
+    case "large":
+      buildLargeWidget(widget);
+      widget.presentLarge();
+      break;
+    case "extraLarge":
+      buildExtraLargeWidget(widget);
+      widget.presentLarge();
+      break;
+    default:
+      buildInvalidParamWidget(widget);
+      widget.presentSmall();
+      break;
   }
   Script.complete();
 }
@@ -143,7 +138,7 @@ function buildInvalidParamWidget(widget) {
   title.font = primaryFont;
   title.textColor = primaryTextColor;
   let info = widget.addText(
-    "The valid sizes are: Small, Medium or Large"
+    "The valid sizes are: Small, Medium, Large or Extra Large"
   );
   info.font = secondaryFont;
   info.textColor = secondaryTextColor;
@@ -163,14 +158,25 @@ function buildInvalidParamWidget(widget) {
   detail.textColor = secondaryTextColor
 }
 
+/** 
+ * Basic widget configuration
+ * 
+ * Common configuration for all widget sizes
+ * @param {ListWidget} widget The widget to configure.
+ */
+function defaultWidgetConfiguration(widget) {
+  widget.backgroundColor = BGColor;
+  widget.useDefaultPadding();
+  widget.spacing = 4;
+}
+
 /**
  * Build a widget (small) with information of the first upcoming launch.
  * 
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildSmallWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
+  defaultWidgetConfiguration(widget);
 
   // Gaurd clause for data.
   if (!data.results) {
@@ -191,14 +197,11 @@ function buildSmallWidget(widget) {
   firstLaunchName.font = primaryFont;
   firstLaunchName.textColor = primaryTextColor;
   
-  widget.addSpacer(4);
   // first launch status stack.
   const statusStack = widget.addStack();
   statusStack.cornerRadius = 10;
   statusStack.setPadding(2, 7, 2, 7);
   statusStack.backgroundColor = getStatusColor(data.results[firstLaunchIndex].status.id);
-  
-  widget.addSpacer(5);
   
   // First launch status text.
   const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
@@ -218,8 +221,7 @@ function buildSmallWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildMediumWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
+  defaultWidgetConfiguration(widget);
   
   // Guard clause for data.
   if (!data.results) {
@@ -239,9 +241,7 @@ function buildMediumWidget(widget) {
   const firstLaunchName = widget.addText(data.results[firstLaunchIndex].name);
   firstLaunchName.font = primaryFont;
   firstLaunchName.textColor = primaryTextColor;
-  
-  widget.addSpacer(4);
-  
+
   // Stack for info of first launch (status, time and date).
   const infoStack = widget.addStack();
   infoStack.centerAlignContent();
@@ -263,9 +263,7 @@ function buildMediumWidget(widget) {
   const launchTimeText = infoStack.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
   launchTimeText.textColor = secondaryTextColor;
   launchTimeText.font = secondaryFont;
-  
-  widget.addSpacer(4)
-  
+
   // Remaining upcoming launches.
   let count = 0
   for (let i = firstLaunchIndex + 1; i < data.results.length; i++) {
@@ -293,8 +291,7 @@ function buildMediumWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildLargeWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
+  defaultWidgetConfiguration(widget);
   
   // Guard clause for data.
   if (!data.results) {
