@@ -70,12 +70,12 @@ const url = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limi
 // Get the data from the API.
 const data = await getData(url)
 
-
+let index;
 let widgetSize;
 // Check if the script runs in the app.
 if (config.runsInApp) {
   const message = "What is the size of the widget?";
-  let index = await generateAlert(message, sizes);
+  index = await generateAlert(message, sizes);
   widgetSize = sizes[index];
 }
 // Or in the widget.
