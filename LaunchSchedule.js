@@ -60,6 +60,7 @@ const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
 const launchCountLimit = isOnMacOS ? 5 : 6;
 // Widget sizes.
 const sizes = ["small", "medium", "large", "extraLarge"];
+const widgetSpacing = {"small": 4, "medium": 4, "large": 10, "extraLarge": 10}
 
 // Root ListWidget.
 let widget = new ListWidget();
@@ -144,11 +145,12 @@ function buildInvalidParamWidget(widget) {
  * 
  * Common configuration for all widget sizes
  * @param {ListWidget} widget The widget to configure.
+ * @param {int} spacing The spacing for elements in the widget.
  */
-function defaultWidgetConfiguration(widget) {
+function defaultWidgetConfiguration(widget, spacing) {
   widget.backgroundColor = BGColor;
   widget.useDefaultPadding();
-  widget.spacing = 4;
+  widget.spacing = spacing;
 }
 
 /**
@@ -157,7 +159,7 @@ function defaultWidgetConfiguration(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildSmallWidget(widget) {
-  defaultWidgetConfiguration(widget);
+  defaultWidgetConfiguration(widget, widgetSpacing["small"]);
 
   // Gaurd clause for data.
   if (!data.results) {
@@ -202,7 +204,7 @@ function buildSmallWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildMediumWidget(widget) {
-  defaultWidgetConfiguration(widget);
+  defaultWidgetConfiguration(widget, widgetSpacing["medium"]);
   
   // Guard clause for data.
   if (!data.results) {
@@ -272,7 +274,60 @@ function buildMediumWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildLargeWidget(widget) {
-  defaultWidgetConfiguration(widget);
+  defaultWidgetConfiguration(widget, widgetSpacing["large"]);
+  
+  // Guard clause for data.
+  if (!data.results) {
+    buildUnableToFetchWidget(widget);
+    return;
+  }
+
+  let count = 0;
+  for (launch of data.results) {
+    // Check if the status ID is valid.
+    if (!isValidStatus(launch.status.id)) {
+      continue;
+    }
+    // Check if the limit of 6 launches is reached.
+    if (count >= launchCountLimit) {
+      break;
+    }
+    // Text for upcoming launch.
+    let launchName = widget.addText(launch.name);
+    launchName.font = primaryFont;
+    launchName.textColor = primaryTextColor;
+    
+    // Stack fo rinfo of the launch (status, time and date).
+    let infoStack = widget.addStack();
+    infoStack.layoutHorizontally();
+
+    // Launch status stack.
+    let statusStack = infoStack.addStack();
+    let statusBGColor = getStatusColor(launch.status.id);
+    statusStack.backgroundColor = statusBGColor;
+    statusStack.cornerRadius = 10;
+    statusStack.setPadding(2, 7, 2, 7);
+    let statusText = statusStack.addText(launch.status.name);
+    statusText.font = statusFont;
+    statusText.textColor = BGColor;
+    
+    infoStack.addSpacer(10);
+    
+    let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
+    launchTimeText.font = secondaryFont;
+    launchTimeText.textColor = secondaryTextColor;
+        
+    count++;
+  }
+}
+
+
+/**
+ * Build a widget (large) with information of the first few upcoming launches.
+ * @param {ListWidget} widget The widget to add content to.
+ */
+function buildExtraLargeWidget(widget) {
+  defaultWidgetConfiguration(widget, widgetSpacing["extraLarge"]);
   
   // Guard clause for data.
   if (!data.results) {
