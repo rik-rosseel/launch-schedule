@@ -60,7 +60,7 @@ const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
 const launchCountLimit = isOnMacOS ? 5 : 6;
 // Widget sizes.
 const sizes = ["small", "medium", "large", "extraLarge"];
-const widgetSpacing = {"small": 4, "medium": 4, "large": 10, "extraLarge": 10}
+const widgetSpacing = {"small": 3, "medium": 3, "large": 7, "extraLarge": 7}
 
 // Root ListWidget.
 let widget = new ListWidget();
