@@ -54,8 +54,6 @@ const limit = 10;
  * @result Middle endian format iff [isMEDateFormat] is equal to true.
  */
 const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
-// Adjust large widget launch count limit based on platform.
-const launchCountLimit = 5;
 // Widget sizes.
 const sizes = ["small", "medium", "large", "extraLarge"];
 const widgetSpacing = {"small": 3, "medium": 3, "large": 7, "extraLarge": 7}
@@ -241,7 +239,7 @@ function buildLargeWidget(widget) {
   let count = 0;
   for (launch of launches) {
     // Check if the limit of 5 or 6 launches is reached.
-    if (count >= launchCountLimit) {
+    if (count >= 6) {
       break;
     }
     addLaunchInfo(widget, launch);
