@@ -274,13 +274,14 @@ function buildExtraLargeWidget(widget) {
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
   
-    const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
-    launchWindowInfoTitle.font = secondaryFont;
+  firstLaunchStack.addSpacer(3);
+  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
+  launchWindowInfoTitle.font = secondaryFont;
   
   const statusDescription = firstLaunchStack.addText(firstLaunch.net_precision.description);
   statusDescription.font = secondaryFont;
   statusDescription.textColor = secondaryTextColor;
-
+  
   const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
   const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
   windowStart.font = secondaryFont;
@@ -290,8 +291,9 @@ function buildExtraLargeWidget(widget) {
   const windowEnd = firstLaunchStack.addText(firstLaunchWindowStart);
   windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
-
-
+  
+  
+  firstLaunchStack.addSpacer(3);
   const missionTitle = firstLaunchStack.addText("Mission:");
   missionTitle.font = secondaryFont;
   
