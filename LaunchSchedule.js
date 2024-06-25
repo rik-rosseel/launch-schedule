@@ -40,8 +40,6 @@ const TBCColor = Color.dynamic(new Color("#ffba00"), new Color("#f6be00"));
 /* OTHER */
 // Use Little Endian (EU) date format or Middle Endian (USA) date format.
 const isMEDateFormat = false;
-// Use the script on macOS
-const isOnMacOS = false;
 // Limit how many launches will be queried from the thespacedevs API.
 // There is a possibility that 10 is not enough to show launches with the ID's given below in the widget.
 const limit = 10;
@@ -51,85 +49,60 @@ const limit = 10;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-/** Little endian date format or Middle endian date format
- * @result Little endian format iff [isMEDateFormat] is equal to false
- * @result Middle endian format iff [isMEDateFormat] is equal to true
+/** Little endian date format or Middle endian date format.
+ * @result Little endian format iff [isMEDateFormat] is equal to false.
+ * @result Middle endian format iff [isMEDateFormat] is equal to true.
  */
 const dateFormat = isMEDateFormat ? "HH:mm MM/dd" : "HH:mm dd/MM";
-/** Adjust large widget launch count limit based on platform
- * 
- * 
- */
-const launchCountLimit = isOnMacOS ? 5 : 6;
-// WIDGET SIZES
-const sizes = ["small", "medium", "large"];
+// Widget sizes.
+const sizes = ["small", "medium", "large", "extraLarge"];
+const widgetSpacing = {"small": 3, "medium": 3, "large": 7, "extraLarge": 7}
 
-// Root ListWidget
+// Root ListWidget.
 let widget = new ListWidget();
 
 
 // Compose API query url.
 const url = "https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json&limit=" + limit;
-// Get the data from the API
+// Get the data from the API.
 const data = await getData(url)
 
-// Check if the script runs in the app
+let index;
+let widgetSize;
+// Check if the script runs in the app.
 if (config.runsInApp) {
   const message = "What is the size of the widget?";
-  let size = await generateAlert(message, sizes);
-  switch (size) {
-    case 0:
-      buildSmallWidget(widget);
-      widget.presentSmall();
-      break;
-    case 1:
-      buildMediumWidget(widget);
-      widget.presentMedium();
-      break;
-    case 2:
-      buildLargeWidget(widget);
-      widget.presentLarge();
-      break;
-    default:
-      buildInvalidParamWidget(widget);
-      widget.presentSmall();
-      break;
-  }
-  Script.complete();
+  index = await generateAlert(message, sizes);
+  widgetSize = sizes[index];
 }
-// Or in the widget
+// Or in the widget.
 else if (config.runsInWidget) {
-  let sizeArg = args.widgetParameter
-  let size = -1;
-  if (sizeArg) {
-    sizeArg.replace(/\s/g, '').toLowerCase();
-    size = sizes.indexOf(sizeArg);
-  }
-  if (size == -1) {
+  widgetSize = config.widgetFamily;
+}
+// Select the size of the widget
+switch (widgetSize) {
+  case "small":
+    buildSmallWidget(widget);
+    widget.presentSmall();
+    break;
+  case "medium":
+    buildMediumWidget(widget);
+    widget.presentMedium();
+    break;
+  case "large":
+    buildLargeWidget(widget);
+    widget.presentLarge();
+    break;
+  case "extraLarge":
+    buildExtraLargeWidget(widget);
+    widget.presentExtraLarge();
+    break;
+  default:
     buildInvalidParamWidget(widget);
     widget.presentSmall();
-  } else {
-    switch (size) {
-      case 0:
-        buildSmallWidget(widget);
-        widget.presentSmall();
-        break;
-      case 1:
-        buildMediumWidget(widget);
-        widget.presentMedium();
-        break;
-      case 2:
-        buildLargeWidget(widget);
-        widget.presentLarge();
-        break;
-      default:
-        buildInvalidParamWidget(widget);
-        widget.presentSmall();
-        break;
-    }
-  }
-  Script.complete();
+    break;
 }
+Script.complete();
 
 
 /**
@@ -143,7 +116,7 @@ function buildInvalidParamWidget(widget) {
   title.font = primaryFont;
   title.textColor = primaryTextColor;
   let info = widget.addText(
-    "The valid sizes are: Small, Medium or Large"
+    "The valid sizes are: Small, Medium, Large or Extra Large"
   );
   info.font = secondaryFont;
   info.textColor = secondaryTextColor;
@@ -163,14 +136,26 @@ function buildInvalidParamWidget(widget) {
   detail.textColor = secondaryTextColor
 }
 
+/** 
+ * Basic widget configuration
+ * 
+ * Common configuration for all widget sizes
+ * @param {ListWidget} widget The widget to configure.
+ * @param {int} spacing The spacing for elements in the widget.
+ */
+function defaultWidgetConfiguration(widget, spacing) {
+  widget.backgroundColor = BGColor;
+  widget.useDefaultPadding();
+  widget.spacing = spacing;
+}
+
 /**
  * Build a widget (small) with information of the first upcoming launch.
  * 
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildSmallWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
+  defaultWidgetConfiguration(widget, widgetSpacing["small"]);
 
   // Gaurd clause for data.
   if (!data.results) {
@@ -178,38 +163,31 @@ function buildSmallWidget(widget) {
     return;
   }
 
-  var firstLaunchIndex = 0
-  // Check for first launch that is to be determined, to be confirmed or is go for launch.
-  while (
-    firstLaunchIndex < data.results.length 
-    && !isValidStatus(data.results[firstLaunchIndex].status.id)
-  ) {
-    firstLaunchIndex++;
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+  if (launches.length > 0) {
+    let firstLaunch = launches[0];
+    widget.spacing = 6;
+    // Text for the first upcoming luanch.
+    const firstLaunchName = widget.addText(firstLaunch.name);
+    firstLaunchName.font = primaryFont;
+    firstLaunchName.textColor = primaryTextColor;
+
+    // first launch status stack.
+    const statusStack = widget.addStack();
+    statusStack.cornerRadius = 10;
+    statusStack.setPadding(2, 7, 2, 7);
+    statusStack.backgroundColor = getStatusColor(firstLaunch.status.id);
+
+    // First launch status text.
+    const firstLaunchStatusText = statusStack.addText(firstLaunch.status.abbrev);
+    firstLaunchStatusText.textColor = BGColor;
+    firstLaunchStatusText.font = statusFont;
+
+    // First launch time and date.
+    const launchDateText = widget.addText(launchDateFormatter(firstLaunch.net));
+    launchDateText.textColor = secondaryTextColor;
+    launchDateText.font = new Font("SF Pro", 15);
   }
-  // Text for the first upcoming luanch.
-  const firstLaunchName = widget.addText(data.results[firstLaunchIndex].name);
-  firstLaunchName.font = primaryFont;
-  firstLaunchName.textColor = primaryTextColor;
-  
-  widget.addSpacer(4);
-  // first launch status stack.
-  const statusStack = widget.addStack();
-  statusStack.cornerRadius = 10;
-  statusStack.setPadding(2, 7, 2, 7);
-  statusStack.backgroundColor = getStatusColor(data.results[firstLaunchIndex].status.id);
-  
-  widget.addSpacer(5);
-  
-  // First launch status text.
-  const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.abbrev);
-  firstLaunchStatusText.textColor = BGColor;
-  firstLaunchStatusText.font = statusFont;
-  
-  // First launch time and date.
-  const launchTimeText = widget.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
-  launchTimeText.textColor = secondaryTextColor;
-  launchTimeText.font = new Font("SF Pro", 15);
-  
 }
 
 /**
@@ -218,71 +196,26 @@ function buildSmallWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildMediumWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
-  
+  defaultWidgetConfiguration(widget, widgetSpacing["medium"]);
   // Guard clause for data.
   if (!data.results) {
     buildUnableToFetchWidget(widget);
     return;
   }
   
-  let firstLaunchIndex = 0;
-  // Check for first launch that is to be determined, to be confirmed or is go for launch.
-  while (
-    firstLaunchIndex < data.results.length 
-    && !isValidStatus(data.results[firstLaunchIndex].status.id)
-  ) {
-    firstLaunchIndex++;
-  }
-  // Text for the first upcoming luanch.
-  const firstLaunchName = widget.addText(data.results[firstLaunchIndex].name);
-  firstLaunchName.font = primaryFont;
-  firstLaunchName.textColor = primaryTextColor;
-  
-  widget.addSpacer(4);
-  
-  // Stack for info of first launch (status, time and date).
-  const infoStack = widget.addStack();
-  infoStack.centerAlignContent();
-  
-  // first launch status stack.
-  const statusStack = infoStack.addStack();
-  statusStack.cornerRadius = 10;
-  statusStack.setPadding(2, 7, 2, 7);
-  statusStack.backgroundColor = getStatusColor(data.results[firstLaunchIndex].status.id);
-  
-  infoStack.addSpacer(10);
-  
-  // First launch status text.
-  const firstLaunchStatusText = statusStack.addText(data.results[firstLaunchIndex].status.name);
-  firstLaunchStatusText.textColor = BGColor;
-  firstLaunchStatusText.font = statusFont;
-  
-  // First launch time and date.
-  const launchTimeText = infoStack.addText(launchTimeFormatter(data.results[firstLaunchIndex].net));
-  launchTimeText.textColor = secondaryTextColor;
-  launchTimeText.font = secondaryFont;
-  
-  widget.addSpacer(4)
-  
-  // Remaining upcoming launches.
-  let count = 0
-  for (let i = firstLaunchIndex + 1; i < data.results.length; i++) {
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+  const launchStack = addLaunchStack(widget);
+  // Add launch info for first launch.
+  addLaunchInfo(launchStack, launches.shift());
+  // Add compact launch info for remaining launches.
+  let count = 0;
+  for (launch of launches) {
+    // Check if the max. of 3 launches is reached.
     if (count == 3) {
       break;
-    } else if (!isValidStatus(data.results[i].status.id)) {
-    continue;
-  }
-    const upcomingStack = widget.addStack();
-    upcomingStack.centerAlignContent();
-    const point = upcomingStack.addText("•");
-    point.font = Font.blackMonospacedSystemFont(25);
-    point.textColor = getStatusColor(data.results[i].status.id);
-    upcomingStack.addSpacer(4);
-    const upcomingLaunchName = upcomingStack.addText(data.results[i].name);
-    upcomingLaunchName.textColor = primaryTextColor;
-    
+    }
+    addCompactLaunchInfo(launchStack.addStack(), launch);
     // Increment launch count.
     count++;
   }
@@ -293,8 +226,7 @@ function buildMediumWidget(widget) {
  * @param {ListWidget} widget The widget to add content to.
  */
 function buildLargeWidget(widget) {
-  widget.backgroundColor = BGColor;
-  widget.addSpacer(4);
+  defaultWidgetConfiguration(widget, widgetSpacing["large"]);
   
   // Guard clause for data.
   if (!data.results) {
@@ -302,45 +234,84 @@ function buildLargeWidget(widget) {
     return;
   }
 
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+
+  const launchStack = addLaunchStack(widget);
   let count = 0;
-  for (launch of data.results) {
-    // Check if the status ID is valid.
-    if (!isValidStatus(launch.status.id)) {
-      continue;
-    }
-    // Check if the limit of 6 launches is reached.
-    if (count >= launchCountLimit) {
+  for (launch of launches) {
+    // Check if the limit of 5 or 6 launches is reached.
+    if (count >= 6) {
       break;
     }
-    // Text for upcoming launch.
-    let launchName = widget.addText(launch.name);
-    launchName.font = primaryFont;
-    launchName.textColor = primaryTextColor;
-    
-    widget.addSpacer(4);
-    
-    // Stack fo rinfo of the launch (status, time and date).
-    let infoStack = widget.addStack();
-    infoStack.layoutHorizontally();
+    addLaunchInfo(launchStack, launch);
+    count++;
+  }
+}
 
-    // Launch status stack.
-    let statusStack = infoStack.addStack();
-    let statusBGColor = getStatusColor(launch.status.id);
-    statusStack.backgroundColor = statusBGColor;
-    statusStack.cornerRadius = 10;
-    statusStack.setPadding(2, 7, 2, 7);
-    let statusText = statusStack.addText(launch.status.name);
-    statusText.font = statusFont;
-    statusText.textColor = BGColor;
-    
-    infoStack.addSpacer(10);
-    
-    let launchTimeText = infoStack.addText(launchTimeFormatter(launch.net));
-    launchTimeText.font = secondaryFont;
-    launchTimeText.textColor = secondaryTextColor;
-    
-    widget.addSpacer(10);
-    
+
+/**
+ * Build a widget (large) with information of the first few upcoming launches.
+ * @param {ListWidget} widget The widget to add content to.
+ */
+function buildExtraLargeWidget(widget) {
+  defaultWidgetConfiguration(widget, widgetSpacing["extraLarge"]);
+  
+  // Guard clause for data.
+  if (!data.results) {
+    buildUnableToFetchWidget(widget);
+    return;
+  }
+
+  // Filter invalid launches.
+  let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
+
+  const extraLargeStack = widget.addStack();
+  extraLargeStack.spacing = 10;
+  const firstLaunchStack = extraLargeStack.addStack();
+  firstLaunchStack.layoutVertically();
+  firstLaunchStack.spacing = 4;
+  firstLaunchStack.size = new Size(350, 0);
+  let firstLaunch = launches.shift();
+  
+  // Basic launch info.
+  addLaunchInfo(firstLaunchStack, firstLaunch);
+  firstLaunchStack.addSpacer(3);
+  
+  // Extra launch info.
+  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
+  // Launch status info.
+  const statusDescription = firstLaunchStack.addText(firstLaunch.net_precision.description);
+  statusDescription.font = secondaryFont;
+  statusDescription.textColor = secondaryTextColor;
+  // Launch window start info.
+  const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
+  const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
+  windowStart.font = secondaryFont;
+  windowStart.textColor = secondaryTextColor;
+  // Launch window end info.
+  const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
+  const windowEnd = firstLaunchStack.addText(firstLaunchWindowEnd);
+  windowEnd.font = secondaryFont;
+  windowEnd.textColor = secondaryTextColor;
+  firstLaunchStack.addSpacer(3);
+  
+  // Launch mission info.
+  const missionTitle = firstLaunchStack.addText("Mission:");
+  const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
+  missionDescription.font = secondaryFont;
+  missionDescription.textColor = secondaryTextColor;
+
+  
+
+  const launchStack = addLaunchStack(extraLargeStack);
+  let count = 0;
+  for (launch of launches) {
+    // Check if the limit of 5 or 6 launches is reached.
+    if (count >= 6) {
+      break;
+    }
+    addLaunchInfo(launchStack, launch);
     count++;
   }
 }
@@ -353,10 +324,75 @@ function buildLargeWidget(widget) {
 /**
  * A function to determine the validity of a status ID.
  * @param {int} statusID The status ID to check.
- * @returns {bool} Returns true iff statusID == 1 || statusID == 2 || statusID == 8
+ * @returns {bool} Returns true if and only if statusID == 1 || statusID == 2 || statusID == 8
  */
 function isValidStatus(statusID) {
   return statusID == 1 || statusID == 2 || statusID == 8;
+}
+
+/**
+ * A function to create a stack for launches.
+ * @param {ListWidget} widget The widget to add the launch stack to.
+ * @returns {WidgetStack} Returns a widget stack with basic configuration setup for adding launches.
+ */
+function addLaunchStack(widget) {
+  // Launch stack.
+  const launchStack = widget.addStack();
+  launchStack.layoutVertically();
+  launchStack.spacing = 4;
+  return launchStack;
+}
+
+/**
+ * A function that builds a compact version of the launch info and adds it to the given widget.
+ * @param {WidgetStack} launchStack The stack to add the compact launch info to.
+ * @param {Object} launch The launch object to be added.
+ */
+function addCompactLaunchInfo(launchStack, launch) {
+  const compactLaunchStack = launchStack.addStack();
+  compactLaunchStack.centerAlignContent();
+  compactLaunchStack.spacing = 10;
+
+  // Status dot for launch
+  const point = compactLaunchStack.addStack();
+  point.size = new Size(8, 8);
+  point.cornerRadius = 4;
+  point.backgroundColor = getStatusColor(launch.status.id);
+
+  // Name of launch.
+  const launchName = compactLaunchStack.addText(launch.name);
+  launchName.textColor = primaryTextColor;
+}
+
+/**
+ * A function that builds the launch info and adds it to the given widget.
+ * @param {WidgetStack} launchStack The stack to add the launch info to.
+ * @param {Object} launch The launch object to be added.
+ */
+function addLaunchInfo(launchStack, launch) {
+  // Name of launch.
+  const launchName = launchStack.addText(launch.name);
+  launchName.font = primaryFont;
+  launchName.textColor = primaryTextColor;
+  
+  // Stack for info of the launch (status, time and date).
+  const infoStack = launchStack.addStack();
+  infoStack.spacing = 10;
+
+  // Stack for launch status.
+  const statusStack = infoStack.addStack();
+  const statusBGColor = getStatusColor(launch.status.id);
+  statusStack.backgroundColor = statusBGColor;
+  statusStack.cornerRadius = 10;
+  statusStack.setPadding(2, 7, 2, 7);
+  // Name of launch status.
+  const statusText = statusStack.addText(launch.status.name);
+  statusText.font = statusFont;
+  statusText.textColor = BGColor;
+  // Date of launch.
+  const launchDateText = infoStack.addText(launchDateFormatter(launch.net));
+  launchDateText.font = secondaryFont;
+  launchDateText.textColor = secondaryTextColor;
 }
 
 /**
@@ -400,7 +436,7 @@ async function getData(url) {
  * @param {String} Date The date to format (in ISO format).
  * @returns {String} The launch time formatted according to the specified date format.
  */
-function launchTimeFormatter(date) {
+function launchDateFormatter(date) {
   let launchTime = new Date(date);
   const df = new DateFormatter();
   df.dateFormat = dateFormat;
