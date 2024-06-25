@@ -9,27 +9,18 @@ There are a few options at the beginning of the script that can be changed to yo
 * Date format (Little endian (dd/mm/yyyy) or Middle endian (mm/dd/yyy)
 * Running on macOS
 
-## Running in Widget
-**IMPORTANT!** When running the script in a widget be sure to edit the widget (on iOS press and hold on the widget, then choose 'Edit "Scriptable"') and fill in the size of the widget in the parameter field.
-There are 3 options:
-* Small
-* Medium
-* Large
-
-(e.g.: when using a medium sized widget fill in `Medium`)
-
-If the parameter is missing or misspelled the widget will display a placeholder widget to fill in or edit the parameter field.
 
 ## Light mode previews
-<img src="https://user-images.githubusercontent.com/36194842/190871200-2c9464ee-4387-4746-aa04-d4c07eeae75e.png" height="200" />
-<img src="https://user-images.githubusercontent.com/36194842/190871197-7639260e-a09e-4b45-98f5-85901d2e187a.png" height="200" />
-<img src="https://user-images.githubusercontent.com/36194842/190871187-75b05770-6a27-4733-a1e1-235b1413712e.png" height="400" />
+<img src="assets/Small Light.png" height="200" />
+<img src="assets/Medium Light.png" height="200" />
+<img src="assets/Large Light.png" height="400" />
+<img src="assets/Extra Large Light.png" height="400" />
 
 ## Dark mode previews
-<img src="https://user-images.githubusercontent.com/36194842/190871199-ed87f00b-e90b-4e33-be66-017fabe9ba57.png" height="200" />
-<img src="https://user-images.githubusercontent.com/36194842/190871196-311066df-6305-4ba7-ac5e-bbafc3e4ced4.png" height="200" />
-<img src="https://user-images.githubusercontent.com/36194842/190871194-396d46f3-35ef-42e8-8abd-d09e8c34f01e.png" height="400" />
-
+<img src="assets/Small Dark.png" height="200" />
+<img src="assets/Medium Dark.png" height="200" />
+<img src="assets/Large Dark.png" height="400" />
+<img src="assets/Extra Large Dark.png" height="400" />
 
 
 
