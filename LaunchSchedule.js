@@ -273,9 +273,22 @@ function buildExtraLargeWidget(widget) {
   firstLaunchStack.size = new Size(350, 0);
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
-  const statusDescription = firstLaunchStack.addText(firstLaunch.status.description);
+  
+  const statusDescription = firstLaunchStack.addText(firstLaunch.status.net_precision.description);
+  statusDescription.font = secondaryFont;
+  statusDescription.textColor = secondaryTextColor;
+  
+  const windowStart = firstLaunchStack.addText(firstLaunch.status.window_start);
+  windowStart.font = secondaryFont;
+  windowStart.textColor = secondaryTextColor;
+  const windowEnd = firstLaunchStack.addText(firstLaunch.status.window_end);
+  windowEnd.font = secondaryFont;
+  windowEnd.textColor = secondaryTextColor;
+
+
   const missionTitle = firstLaunchStack.addText("Mission:");
   missionTitle.font = secondaryFont;
+  
   const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
   missionDescription.font = secondaryFont;
   missionDescription.textColor = secondaryTextColor;
