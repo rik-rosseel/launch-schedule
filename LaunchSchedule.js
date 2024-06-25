@@ -236,13 +236,14 @@ function buildLargeWidget(widget) {
   // Filter invalid launches.
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
 
+  const launchStack = addLaunchStack(widget);
   let count = 0;
   for (launch of launches) {
     // Check if the limit of 5 or 6 launches is reached.
     if (count >= 6) {
       break;
     }
-    addLaunchInfo(widget.addStack(), launch);
+    addLaunchInfo(launchStack, launch);
     count++;
   }
 }
@@ -264,13 +265,19 @@ function buildExtraLargeWidget(widget) {
   // Filter invalid launches.
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
 
+  const extraLargeStack = widget.addStack();
+  extraLargeStack.spacing = 10;
+  let firstLaunch = launches.shift();
+  
+
+  const launchStack = addLaunchStack(widget);
   let count = 0;
   for (launch of launches) {
     // Check if the limit of 5 or 6 launches is reached.
     if (count >= 6) {
       break;
     }
-    addLaunchInfo(widget.addStack(), launch);
+    addLaunchInfo(launchStack, launch);
     count++;
   }
 }
@@ -290,15 +297,24 @@ function isValidStatus(statusID) {
 }
 
 /**
+ * A function to create a stack for launches.
+ * @param {ListWidget} widget The widget to add the launch stack to.
+ * @returns {WidgetStack} Returns a widget stack with basic configuration setup for adding launches.
+ */
+function addLaunchStack(widget) {
+  // Launch stack.
+  const launchStack = widget.addStack();
+  launchStack.layoutVertically();
+  launchStack.spacing = 4;
+  return launchStack;
+}
+
+/**
  * A function that builds a compact version of the launch info and adds it to the given widget.
  * @param {WidgetStack} launchStack The stack to add the compact launch info to.
  * @param {Object} launch The launch object to be added.
  */
 function addCompactLaunchInfo(launchStack, launch) {
-  // Launch Stack.
-  launchStack.centerAlignContent();
-  launchStack.spacing = 4;
-
   // Status dot for launch
   const point = launchStack.addText("•");
   point.font = Font.blackMonospacedSystemFont(25);
@@ -315,10 +331,6 @@ function addCompactLaunchInfo(launchStack, launch) {
  * @param {Object} launch The launch object to be added.
  */
 function addLaunchInfo(launchStack, launch) {
-  // Launch stack.
-  launchStack.layoutVertically();
-  launchStack.spacing = 4;
-
   // Name of launch.
   const launchName = launchStack.addText(launch.name);
   launchName.font = primaryFont;
