@@ -288,7 +288,7 @@ function buildExtraLargeWidget(widget) {
   windowStart.textColor = secondaryTextColor;
   
   const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
-  const windowEnd = firstLaunchStack.addText(firstLaunchWindowStart);
+  const windowEnd = firstLaunchStack.addText(firstLaunchWindowEnd);
   windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
   
