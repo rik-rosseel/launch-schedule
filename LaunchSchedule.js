@@ -269,7 +269,7 @@ function buildExtraLargeWidget(widget) {
   extraLargeStack.spacing = 10;
   const firstLaunchStack = extraLargeStack.addStack();
   firstLaunchStack.layoutVertically();
-  firstLaunchStack.spacing = 3;
+  firstLaunchStack.spacing = 4;
   firstLaunchStack.size = new Size(350, 0);
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
