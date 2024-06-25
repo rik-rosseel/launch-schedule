@@ -276,7 +276,6 @@ function buildExtraLargeWidget(widget) {
   
   firstLaunchStack.addSpacer(3);
   const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
-  launchWindowInfoTitle.font = secondaryFont;
   
   const statusDescription = firstLaunchStack.addText(firstLaunch.net_precision.description);
   statusDescription.font = secondaryFont;
@@ -296,7 +295,6 @@ function buildExtraLargeWidget(widget) {
   
   firstLaunchStack.addSpacer(3);
   const missionTitle = firstLaunchStack.addText("Mission:");
-  missionTitle.font = secondaryFont;
   
   const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
   missionDescription.font = secondaryFont;
