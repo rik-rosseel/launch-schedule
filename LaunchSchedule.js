@@ -284,12 +284,13 @@ function buildExtraLargeWidget(widget) {
   
   const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
   const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
-  // windowStart.font = secondaryFont;
+  windowStart.font = secondaryFont;
   windowStart.textColor = secondaryTextColor;
   
   const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
-  const windowEnd = firstLaunchStack.addText(firstLaunchWindowEnd);
-  // windowEnd.font = secondaryFont;
+
+  const windowEnd = firstLaunchStack.addText(firstLaunchWindowStart);
+  windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
   
   
