@@ -274,12 +274,12 @@ function buildExtraLargeWidget(widget) {
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
   
+    const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
+    launchWindowInfoTitle.font = secondaryFont;
+  
   const statusDescription = firstLaunchStack.addText(firstLaunch.net_precision.description);
   statusDescription.font = secondaryFont;
   statusDescription.textColor = secondaryTextColor;
-
-  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
-  launchWindowInfoTitle.font = secondaryFont;
 
   const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
   const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
