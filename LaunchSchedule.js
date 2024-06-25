@@ -267,7 +267,7 @@ function buildExtraLargeWidget(widget) {
   let count = 0;
   for (launch of launches) {
     // Check if the limit of 5 or 6 launches is reached.
-    if (count >= launchCountLimit) {
+    if (count >= 6) {
       break;
     }
     addLaunchInfo(widget.addStack(), launch);
