@@ -273,9 +273,9 @@ function buildExtraLargeWidget(widget) {
   firstLaunchStack.size = new Size(300, 0);
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
-  const statusDescription = firstLaunch.addText(firstLaunch.status.description);
-  const missionTitle = firstLaunch.addText("Mission:");
-  const missionDescription = firstLaunch.addText(firstLaunch.mission.description);
+  const statusDescription = firstLaunchStack.addText(firstLaunch.status.description);
+  const missionTitle = firstLaunchStack.addText("Mission:");
+  const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
 
   
 
