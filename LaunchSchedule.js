@@ -267,10 +267,14 @@ function buildExtraLargeWidget(widget) {
 
   const extraLargeStack = widget.addStack();
   extraLargeStack.spacing = 10;
+  const firstLaunchStack = extraLargeStack.addStack();
+  firstLaunchStack.layoutVertically();
+  firstLaunchStack.spacing = 3;
   let firstLaunch = launches.shift();
+  addLaunchInfo(firstLaunchStack, firstLaunch);
   
 
-  const launchStack = addLaunchStack(widget);
+  const launchStack = addLaunchStack(extraLargeStack);
   let count = 0;
   for (launch of launches) {
     // Check if the limit of 5 or 6 launches is reached.
