@@ -354,9 +354,10 @@ function addCompactLaunchInfo(launchStack, launch) {
   compactLaunchStack.spacing = 10;
 
   // Status dot for launch
-  const point = compactLaunchStack.addText("•");
-  point.font = Font.blackMonospacedSystemFont(25);
-  point.textColor = getStatusColor(launch.status.id);
+  const point = compactLaunchStack.addStack();
+  point.size = new Size(8, 8);
+  point.cornerRadius = 4;
+  point.backgroundColor = getStatusColor(launch.status.id);
 
   // Name of launch.
   const launchName = compactLaunchStack.addText(launch.name);
