@@ -272,30 +272,31 @@ function buildExtraLargeWidget(widget) {
   firstLaunchStack.spacing = 4;
   firstLaunchStack.size = new Size(350, 0);
   let firstLaunch = launches.shift();
+  
+  // Basic launch info.
   addLaunchInfo(firstLaunchStack, firstLaunch);
-  
   firstLaunchStack.addSpacer(3);
-  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
   
+  // Extra launch info.
+  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
+  // Launch status info.
   const statusDescription = firstLaunchStack.addText(firstLaunch.net_precision.description);
   statusDescription.font = secondaryFont;
   statusDescription.textColor = secondaryTextColor;
-  
+  // Launch window start info.
   const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
   const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
   windowStart.font = secondaryFont;
   windowStart.textColor = secondaryTextColor;
-  
+  // Launch window end info.
   const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
-
   const windowEnd = firstLaunchStack.addText(firstLaunchWindowEnd);
   windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
-  
-  
   firstLaunchStack.addSpacer(3);
-  const missionTitle = firstLaunchStack.addText("Mission:");
   
+  // Launch mission info.
+  const missionTitle = firstLaunchStack.addText("Mission:");
   const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
   missionDescription.font = secondaryFont;
   missionDescription.textColor = secondaryTextColor;
