@@ -270,12 +270,15 @@ function buildExtraLargeWidget(widget) {
   const firstLaunchStack = extraLargeStack.addStack();
   firstLaunchStack.layoutVertically();
   firstLaunchStack.spacing = 3;
-  firstLaunchStack.size = new Size(300, 0);
+  firstLaunchStack.size = new Size(350, 0);
   let firstLaunch = launches.shift();
   addLaunchInfo(firstLaunchStack, firstLaunch);
   const statusDescription = firstLaunchStack.addText(firstLaunch.status.description);
   const missionTitle = firstLaunchStack.addText("Mission:");
+  missionTitle.font = secondaryFont;
   const missionDescription = firstLaunchStack.addText(firstLaunch.mission.description);
+  missionDescription.font = secondaryFont;
+  missionDescription.textColor = secondaryTextColor;
 
   
 
