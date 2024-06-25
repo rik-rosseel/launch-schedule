@@ -278,10 +278,16 @@ function buildExtraLargeWidget(widget) {
   statusDescription.font = secondaryFont;
   statusDescription.textColor = secondaryTextColor;
 
-  const windowStart = firstLaunchStack.addText(launchDateFormatter(firstLaunch.window_start));
+  const launchWindowInfoTitle = firstLaunchStack.addText("Launch Window:");
+  launchWindowInfoTitle.font = secondaryFont;
+
+  const firstLaunchWindowStart = "Window start: ".concat(launchDateFormatter(firstLaunch.window_start));
+  const windowStart = firstLaunchStack.addText(firstLaunchWindowStart);
   windowStart.font = secondaryFont;
   windowStart.textColor = secondaryTextColor;
-  const windowEnd = firstLaunchStack.addText(launchDateFormatter(firstLaunch.window_end));
+  
+  const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
+  const windowEnd = firstLaunchStack.addText(firstLaunchWindowStart);
   windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
 
