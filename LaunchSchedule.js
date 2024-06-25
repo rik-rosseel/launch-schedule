@@ -204,9 +204,9 @@ function buildMediumWidget(widget) {
   
   // Filter invalid launches.
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
-  addLaunchStack
+  const launchStack = addLaunchStack(widget);
   // Add launch info for first launch.
-  addLaunchInfo(addLaunchStack(widget), launches.shift());
+  addLaunchInfo(launchStack, launches.shift());
   // Add compact launch info for remaining launches.
   let count = 0;
   for (launch of launches) {
@@ -214,7 +214,7 @@ function buildMediumWidget(widget) {
     if (count == 3) {
       break;
     }
-    addCompactLaunchInfo(widget.addStack(), launch);
+    addCompactLaunchInfo(launchStack.addStack(), launch);
     // Increment launch count.
     count++;
   }
@@ -338,6 +338,7 @@ function addLaunchStack(widget) {
   const launchStack = widget.addStack();
   launchStack.layoutVertically();
   launchStack.spacing = 4;
+  launchStack.centerAlignConent();
   return launchStack;
 }
 
