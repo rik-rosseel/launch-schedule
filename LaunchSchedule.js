@@ -204,9 +204,9 @@ function buildMediumWidget(widget) {
   
   // Filter invalid launches.
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
-
+  addLaunchStack
   // Add launch info for first launch.
-  addLaunchInfo(widget.addStack(), launches.shift());
+  addLaunchInfo(addLaunchStack(widget), launches.shift());
   // Add compact launch info for remaining launches.
   let count = 0;
   for (launch of launches) {
