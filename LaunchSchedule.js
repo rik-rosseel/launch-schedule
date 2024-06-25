@@ -206,7 +206,7 @@ function buildMediumWidget(widget) {
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
 
   // Add launch info for first launch.
-  addLaunchInfo(widget, launches.shift());
+  addLaunchInfo(widget.addStack(), launches.shift());
   // Add compact launch info for remaining launches.
   let count = 0;
   for (launch of launches) {
@@ -214,7 +214,7 @@ function buildMediumWidget(widget) {
     if (count == 3) {
       break;
     }
-    addCompactLaunchInfo(widget, launch);
+    addCompactLaunchInfo(widget.addStack(), launch);
     // Increment launch count.
     count++;
   }
@@ -242,7 +242,7 @@ function buildLargeWidget(widget) {
     if (count >= 6) {
       break;
     }
-    addLaunchInfo(widget, launch);
+    addLaunchInfo(widget.addStack(), launch);
     count++;
   }
 }
@@ -270,7 +270,7 @@ function buildExtraLargeWidget(widget) {
     if (count >= launchCountLimit) {
       break;
     }
-    addLaunchInfo(widget, launch);
+    addLaunchInfo(widget.addStack(), launch);
     count++;
   }
 }
@@ -291,12 +291,11 @@ function isValidStatus(statusID) {
 
 /**
  * A function that builds a compact version of the launch info and adds it to the given widget.
- * @param {ListWidget} widget The widget to add the compact launch info to.
+ * @param {WidgetStack} launchStack The stack to add the compact launch info to.
  * @param {Object} launch The launch object to be added.
  */
-function addCompactLaunchInfo(widget, launch) {
+function addCompactLaunchInfo(launchStack, launch) {
   // Launch Stack.
-  const launchStack = widget.addStack();
   launchStack.centerAlignContent();
   launchStack.spacing = 4;
 
@@ -312,12 +311,11 @@ function addCompactLaunchInfo(widget, launch) {
 
 /**
  * A function that builds the launch info and adds it to the given widget.
- * @param {ListWidget} widget The widget to add the launch info to.
+ * @param {WidgetStack} launchStack The stack to add the launch info to.
  * @param {Object} launch The launch object to be added.
  */
-function addLaunchInfo(widget, launch) {
+function addLaunchInfo(launchStack, launch) {
   // Launch stack.
-  const launchStack = widget.addStack();
   launchStack.layoutVertically();
   launchStack.spacing = 4;
 
