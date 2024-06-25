@@ -338,7 +338,6 @@ function addLaunchStack(widget) {
   const launchStack = widget.addStack();
   launchStack.layoutVertically();
   launchStack.spacing = 4;
-  launchStack.centerAlignContent();
   return launchStack;
 }
 
