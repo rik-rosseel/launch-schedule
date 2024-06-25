@@ -288,7 +288,7 @@ function buildExtraLargeWidget(widget) {
   
   const firstLaunchWindowEnd = "Window end: ".concat(launchDateFormatter(firstLaunch.window_end));
 
-  const windowEnd = firstLaunchStack.addText(firstLaunchWindowStart);
+  const windowEnd = firstLaunchStack.addText(firstLaunchWindowEnd);
   windowEnd.font = secondaryFont;
   windowEnd.textColor = secondaryTextColor;
   
@@ -348,13 +348,17 @@ function addLaunchStack(widget) {
  * @param {Object} launch The launch object to be added.
  */
 function addCompactLaunchInfo(launchStack, launch) {
+  const compactLaunchStack = launchStack.addStack();
+  compactLaunchStack.centerAlignContent();
+  compactLaunchStack.spacing = 10;
+
   // Status dot for launch
-  const point = launchStack.addText("•");
+  const point = compactLaunchStack.addText("•");
   point.font = Font.blackMonospacedSystemFont(25);
   point.textColor = getStatusColor(launch.status.id);
 
   // Name of launch.
-  const launchName = launchStack.addText(launch.name);
+  const launchName = compactLaunchStack.addText(launch.name);
   launchName.textColor = primaryTextColor;
 }
 
