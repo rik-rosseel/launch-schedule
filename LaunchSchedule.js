@@ -166,6 +166,7 @@ function buildSmallWidget(widget) {
   let launches = data.results.filter((launch) => isValidStatus(launch.status.id));
   if (launches.length > 0) {
     let firstLaunch = launches[0];
+    widget.spacing = 6;
     // Text for the first upcoming luanch.
     const firstLaunchName = widget.addText(firstLaunch.name);
     firstLaunchName.font = primaryFont;
