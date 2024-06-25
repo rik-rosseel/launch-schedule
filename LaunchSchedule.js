@@ -95,7 +95,7 @@ switch (widgetSize) {
     break;
   case "extraLarge":
     buildExtraLargeWidget(widget);
-    widget.presentLarge();
+    widget.presentExtraLarge();
     break;
   default:
     buildInvalidParamWidget(widget);
